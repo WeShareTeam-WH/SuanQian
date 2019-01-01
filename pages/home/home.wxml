@@ -1,0 +1,36 @@
+<import src="../../template/IconInput/IconInput.wxml" />
+<import src="../../template/ResultOutput/resultOutput.wxml" />
+<view class="page">
+  <view class='page__bd page__bd_spacing'>
+    <view class="spend-warpper">
+      <view class="weui-cells__title wrapper-title">成员费用</view>
+      <view class='user-item'>
+        <view wx:for='{{userinfos}}' wx:key='item'>
+          <template is="iconInputTemplate" data="{{icon1:'../../source/user.png',icon2:'../../source/money.png', userId: item.userId, userName: item.userName, useMoney: item.useMoney}}" />
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input" style='height: 70rpx;display: flex;justify-content:center;'>
+        <image src='../../source/add.png' style='width: 50rpx; height: 50rpx;' catchtap='addUserItem'></image>
+      </view>
+    </view>
+    <view class="spend-warpper {{showView?'header_view_show':'header_view_hide'}}">
+      <view class="weui-cells__title wrapper-title">算钱方案</view>
+      <view wx:for='{{resultData}}' wx:key='item'>
+        <template is="resultOutputTemplate" data="{{icon1:'../../source/user.png', fromUserName: item.fromUserName, toUserName: item.toUserName, money: item.money}}" />
+      </view>
+    </view>
+    
+    <view class='option-button'>
+      <button class='weui-btn calculation' bindtap='calculation'>计算</button>
+      <button class='weui-btn reset'>重置</button>
+    </view>
+    
+    <view class="weui-footer">
+      <view class="weui-footer__links">
+        <navigator url="" class="weui-footer__link">底部链接</navigator>
+        <navigator url="" class="weui-footer__link">底部链接</navigator>
+      </view>
+      <view class="weui-footer__text">Copyright © 2008-2016 weui.io</view>
+    </view>
+  </view>
+</view>

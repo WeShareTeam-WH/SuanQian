@@ -1,0 +1,15 @@
+/* template/resultOutput.wxss */
+.item {
+  display: flex;
+  height: 80rpx;
+  width: 90%;
+  background-color: #eff0f2;
+  border-radius: 40rpx;
+  align-items: center;
+  padding: 0 20rpx;
+}
+
+.icon {
+  width: 50rpx;
+  height: 50rpx;
+}

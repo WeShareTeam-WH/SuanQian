@@ -1,0 +1,18 @@
+<template name="resultOutputTemplate">  
+  <view class="weui-cell weui-cell_input user-input">
+    <view class='container'>
+      <view class='item' style='display: flex; height: 80rpx; width: 90%;align-items: center;'>
+        <image src='{{icon1}}' style='width: 50rpx; height: 50rpx;'></image>
+        <input class='user-name' type='text' value='{{fromUserName}}'></input>
+      </view>
+    </view>
+    <text style='flex-direction: row;'>转账</text>
+    <view class='container'>
+      <view class='item' style='display: flex; height: 80rpx; width: 90%;align-items: center;'>
+        <image src='{{icon1}}' style='width: 50rpx; height: 50rpx;'></image>
+        <input class='user-name' type='text' value='{{toUserName}}'></input>
+      </view>
+    </view>
+    <view>{{money}}</view>
+  </view>
+</template>
