@@ -48,10 +48,15 @@ Page({
     var userInfos = this.data.userinfos;
     // Step1: get ave value
     var totalAmount = 0;
-    var userNumber = userInfos.length;
+    var userNumber = 0;
     for(var i in userInfos) {
       var userInfo = userInfos[i];
-      totalAmount += parseFloat(userInfo.useMoney);
+      var useMoney = 0;
+      if (userInfo.useMoney != '') {
+        useMoney = userInfo.useMoney;
+        userNumber += 1;
+      }
+      totalAmount += parseFloat(useMoney);
     }
     var avg = totalAmount/userNumber;
     console.log("totalAmount:%s,userNumber:%s,avg:%s", totalAmount, userNumber, avg);
@@ -63,14 +68,16 @@ Page({
       var userInfo = userInfos[i];
       var userId = userInfo.userId;
       var userName = userInfo.userName;
-      var useMoney = parseFloat(userInfo.useMoney);
-      var diff = useMoney - avg;
-      if (diff > 0) {
-        positives[userId] = diff;
-      } else if (diff == 0) {
-        // not do nothing
-      } else {
-        negatives[userId] = diff;
+      if (userName != '' && userInfo.useMoney != '') {
+        var useMoney = parseFloat(userInfo.useMoney);
+        var diff = useMoney - avg;
+        if (diff > 0) {
+          positives[userId] = diff;
+        } else if (diff == 0) {
+          // not do nothing
+        } else {
+          negatives[userId] = diff;
+        }
       }
     }
 
@@ -237,8 +244,8 @@ Page({
           for(var i in userIdList) {
             var uId = userIdList[i];
             resultData.push({
-              fromUserName: this.getUserInfoByUserId(uId).userName,
-              toUserName: this.getUserInfoByUserId(id).userName,
+              fromUserName: this.getUserInfoByUserId(id).userName,
+              toUserName: this.getUserInfoByUserId(uId).userName,
               money: mores[uId].toFixed(2)
             })
           }

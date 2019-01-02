@@ -1,18 +1,19 @@
 <template name="resultOutputTemplate">  
-  <view class="weui-cell weui-cell_input user-input">
-    <view class='container'>
-      <view class='item' style='display: flex; height: 80rpx; width: 90%;align-items: center;'>
-        <image src='{{icon1}}' mode='widthFix' style='width: 70rpx; margin-right:15rpx'></image>
-        <input class='user-name' type='text' value='{{fromUserName}}'></input>
+  <view class="weui-flex" style='margin-left:12px'>
+    <view class="weui-flex__item">
+      <view class="placeholder">{{fromUserName}}</view>
+    </view>
+    <view class="weui-flex__item">
+      <view class="placeholder">
+        <image src='{{icon1}}' mode='widthFix' style='width: 60rpx;'></image>
       </view>
     </view>
-    <text style='flex-direction: row;'>转账</text>
-    <view class='container'>
-      <view class='item' style='display: flex; height: 80rpx; width: 90%;align-items: center;'>
-        <image src='{{icon1}}' mode='widthFix' style='width: 80rpx; margin-right:15rpx'></image>
-        <input class='user-name' type='text' value='{{toUserName}}'></input>
-      </view>
+    <view class="weui-flex__item" style='margin-left:-12px;'>
+      <view class="placeholder">{{toUserName}}</view>
     </view>
-    <view class='user-name'>{{money}}</view>
+    <view class="weui-flex__item" style='margin-left: 12px;'>
+      <image src='{{icon1}}' mode='widthFix' style='width: 60rpx;display: inline-block'></image>
+      <view class="placeholder" style='display: inline-block; margin-bottom: 10px;'>{{money}}</view>
+    </view>
   </view>
 </template>

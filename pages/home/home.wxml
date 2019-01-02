@@ -18,7 +18,7 @@
     <view class="spend-warpper {{showView?'header_view_show':'header_view_hide'}}">
       <view class="weui-cells__title wrapper-title">算钱方案</view>
       <view wx:for='{{resultData}}' wx:key='item'>
-        <template is="resultOutputTemplate" data="{{icon1:'../../source/user.png', fromUserName: item.fromUserName, toUserName: item.toUserName, money: item.money}}" />
+        <template is="resultOutputTemplate" data="{{icon1:'../../source/zhuanzhang.png', fromUserName: item.fromUserName, toUserName: item.toUserName, money: item.money}}" />
       </view>
     </view>
     
