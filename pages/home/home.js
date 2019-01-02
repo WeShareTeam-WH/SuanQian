@@ -165,12 +165,12 @@ Page({
     if (maxValue > -minValue) {
       var maxPerson = posSortList[0][0]
       var minPersons = [negSortList[0][0]]
-      var index = len(negSortList) - 1
+      var index = Object.keys(negSortList).length - 1
       var minValueSum = minValue
       while (index > 0) {
         minValueSum += negSortList[index][1]
         if (-(minValueSum) < maxValue) {
-          minPersons.append(negSortList[index][0])
+          minPersons.push(negSortList[index][0])
           index -= 1
         } else {
           break;
@@ -193,12 +193,12 @@ Page({
     } else {
       minPerson = negSortList[0][0]
       maxPersons=[posSortList[0][0]]
-      index = len(posSortList) - 1
+      index = Object.keys(posSortList).length - 1
       maxValueSum=maxValue
       while (index > 0) {
         maxValueSum += posSortList[index][1];
         if (maxValueSum < -minValue) {
-          maxPersons.append(posSortList[index][0])
+          maxPersons.push(posSortList[index][0])
           index -= 1
         } else {
           break;

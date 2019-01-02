@@ -13,3 +13,8 @@
   width: 50rpx;
   height: 50rpx;
 }
+
+.user-name
+{
+  color: rgb(66, 66, 64)
+}
