@@ -1,19 +1,25 @@
 <template name="resultOutputTemplate">  
-  <view class="weui-flex" style='margin-left:12px'>
+  <view class="weui-flex" style="margin:20rpx 10rpx 20rpx 20rpx;">
     <view class="weui-flex__item">
-      <view class="placeholder">{{fromUserName}}</view>
+      <view class="column" style='color:rgb(90, 90, 88);'>{{fromUserName}}</view>
     </view>
     <view class="weui-flex__item">
-      <view class="placeholder">
-        <image src='{{icon1}}' mode='widthFix' style='width: 60rpx;'></image>
+      <view class="column">
+        <image src='{{icon1}}' mode='widthFix' style='width: 50rpx;float:left'></image>
+        <label class="title-hint" style='float:left;padding-top:10rpx'>转给</label>
+        <!-- <input class='user-name' type='text' name='userName' value='转给'></input> -->
       </view>
     </view>
-    <view class="weui-flex__item" style='margin-left:-12px;'>
-      <view class="placeholder">{{toUserName}}</view>
+    <view class="weui-flex__item">
+      <view class="column" style='color:rgb(90, 90, 88);'>{{toUserName}}</view>
     </view>
-    <view class="weui-flex__item" style='margin-left: 12px;'>
-      <image src='{{icon1}}' mode='widthFix' style='width: 60rpx;display: inline-block'></image>
-      <view class="placeholder" style='display: inline-block; margin-bottom: 10px;'>{{money}}</view>
+    <view class="weui-flex__item" >      
+      <view class="column" style='float:right;padding:5rpx 10rpx 0 5rpx;color: #FFD711;font-weight:bold;font-size:33rpx'>￥{{money}}</view>
+      <!-- <image src='{{icon2}}' mode='widthFix' style='float:right;width: 50rpx;'></image> -->
     </view>
   </view>
+  <view style='margin: auto;width:95%;height:1px;background:#E8E8E8'></view> 
+
+
+  
 </template>

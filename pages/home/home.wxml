@@ -4,7 +4,7 @@
   <view class='page__bd page__bd_spacing'>
     <view class="spend-warpper">
       <view class="weui-cells__title wrapper-title">成员出资
-      <label class="title-hint">每个人出的钱</label>
+        <label class="title-hint">每个人出的钱</label>
       </view>
       <view class='user-item'>
         <view wx:for='{{userinfos}}' wx:key='item'>
@@ -16,17 +16,37 @@
       </view>
     </view>
     <view class="spend-warpper {{showView?'header_view_show':'header_view_hide'}}">
-      <view class="weui-cells__title wrapper-title">算钱方案</view>
-      <view wx:for='{{resultData}}' wx:key='item'>
-        <template is="resultOutputTemplate" data="{{icon1:'../../source/zhuanzhang.png', fromUserName: item.fromUserName, toUserName: item.toUserName, money: item.money}}" />
+      <view class="weui-cells__title wrapper-title">消费概览</view>
+      <view class="weui-flex" style="margin:20rpx 10rpx 20rpx 20rpx;">
+        <view class="weui-flex__item">
+          
+            <image src='../../source/total.png' mode='widthFix' style='width: 60rpx;float:left;padding-top:5rpx'></image>
+            <text class="title-hint" style='float:left;'>消费\n总额</text>
+            <!-- <label class="summary" style='float:left;padding:0 10rpx 0 10rpx;'>￥{{total}}</label> -->
+            <view class="summary" >￥{{total}}</view>
+          
+        </view>
+        <view class="weui-flex__item">
+            <image src='../../source/renjun.png' mode='widthFix' style='width: 60rpx;float:left;;padding-top:5rpx'></image>
+            <text class="title-hint" style='float:left'>人均\n消费</text>
+            <!-- <label class="summary" style='float:left;padding:0 10rpx 0 10rpx;'>￥{{avg}}</label> -->
+            <view class="summary" >￥{{avg}}</view>
+          
+        </view>
       </view>
     </view>
-    
+    <view class="spend-warpper {{showView?'header_view_show':'header_view_hide'}}">
+      <view class="weui-cells__title wrapper-title">转账方案</view>
+      <view wx:for='{{resultData}}' wx:key='item'>
+        <template is="resultOutputTemplate" data="{{icon1:'../../source/zhuanzhang.png',icon2:'../../source/money.png', fromUserName: item.fromUserName, toUserName: item.toUserName, money: item.money}}" />
+      </view>
+    </view>
+
     <view class='option-button'>
       <button class='weui-btn calculation' bindtap='calculation'>计算</button>
       <button class='weui-btn reset'>重置</button>
     </view>
-    
+
     <view class="weui-footer">
       <view class="weui-footer__links">
         <navigator url="" class="weui-footer__link">计算规则</navigator>

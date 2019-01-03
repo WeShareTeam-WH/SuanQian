@@ -16,6 +16,8 @@ Page({
       useMoney: 26.22
     }],
     resultData: [],
+    total:0,
+    avg:0,
     showView: false
   },
   addUserItem: function() {
@@ -159,13 +161,16 @@ Page({
 
     // Step4: show Result
     this.setData({
-      showView: true
+      showView: true,
+      total: totalAmount,
+      avg: avg
     })
   },
   showResult: function() {
     
   },
   multiOffset: function (posSortList, negSortList, posRecords, negRecords) {
+    var resultData = []
     var result = ''
     var maxValue = posSortList[0][1]
     var minValue = negSortList[0][1]
@@ -191,6 +196,12 @@ Page({
       for (var k in minPersons) {
         var minPerson = minPersons[k];
         result += minPerson + ' handle ' + negRecords[minPerson].toFixed(2) + ' on ' + maxPerson + '\n'
+        resultData.push({
+          fromUserName: this.getUserInfoByUserId(id).userName,
+          toUserName: this.getUserInfoByUserId(uId).userName,
+          money: mores[uId].toFixed(2)
+        })
+
         negRecords.pop(minPerson)
       }
 
