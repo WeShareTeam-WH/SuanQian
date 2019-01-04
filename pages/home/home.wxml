@@ -43,8 +43,8 @@
     </view>
 
     <view class='option-button'>
-      <button class='weui-btn calculation' bindtap='calculation'>计算</button>
-      <button class='weui-btn reset' bindtap='resetUserItem'>重置</button>
+      <button class='weui-btn calculation' hover-class='click-calculation' bindtap='calculation'>计算</button>
+      <button class='weui-btn reset' hover-class='click-reset' bindtap='resetUserItem'>重置</button>
     </view>
 
     <view class="weui-footer">

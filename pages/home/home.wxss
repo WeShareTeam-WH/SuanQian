@@ -70,10 +70,18 @@ page{
   color: rgb(165, 137, 0);
 }
 
-.header_view_hide{
+.header_view_hide {
   display: none;
 }
 
-.header_view_show{
+.header_view_show {
   display: block;
+}
+
+.click-calculation {
+  background-color: #FFD711
+}
+
+.click-reset {
+  background-color: rgb(255, 235, 134);
 }
