@@ -35,7 +35,7 @@
         </view>
       </view>
     </view>
-    <view class="spend-warpper {{showView?'header_view_show':'header_view_hide'}}">
+    <view class="spend-warpper {{showResult?'header_view_show':'header_view_hide'}}">
       <view class="weui-cells__title wrapper-title">转账方案</view>
       <view wx:for='{{resultData}}' wx:key='item'>
         <template is="resultOutputTemplate" data="{{icon1:'../../source/zhuanzhang.png',icon2:'../../source/money.png', fromUserName: item.fromUserName, toUserName: item.toUserName, money: item.money}}" />
@@ -44,7 +44,7 @@
 
     <view class='option-button'>
       <button class='weui-btn calculation' bindtap='calculation'>计算</button>
-      <button class='weui-btn reset'>重置</button>
+      <button class='weui-btn reset' bindtap='resetUserItem'>重置</button>
     </view>
 
     <view class="weui-footer">

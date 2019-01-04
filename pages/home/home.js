@@ -1,28 +1,35 @@
 Page({
   data: {
     userinfos: [{
-      userId:1,
-      userName: 'Simon',
-      useMoney: 12.11
-    },
-    {
-      userId: 2,
-      userName: 'Lowrence',
-      useMoney: 20.5
-    },
-    {
-      userId: 3,
-      userName: 'Tom',
-      useMoney: 26.22
-    }],
+        userId: 1,
+        userName: 'Simon',
+        useMoney: 3
+      },
+      {
+        userId: 2,
+        userName: 'Lowrence',
+        useMoney: 5
+      },
+      {
+        userId: 3,
+        userName: 'Tom',
+        useMoney: 0
+      },
+      {
+        userId: 4,
+        userName: 'Joseph',
+        useMoney: 0
+      }
+    ],
     resultData: [],
-    total:0,
-    avg:0,
-    showView: false
+    total: 0,
+    avg: 0,
+    showView: false,
+    showResult: false
   },
   addUserItem: function() {
     var userInfos = this.data.userinfos;
-    var userId = userInfos[userInfos.length -1].userId + 1;
+    var userId = userInfos[userInfos.length - 1].userId + 1;
     userInfos.push({
       userId: userId,
       userName: '',
@@ -46,21 +53,48 @@ Page({
       userinfos: newUserInfos
     })
   },
+  resetUserItem: function() {
+    var userinfos= [{
+      userId: 1,
+      userName: '',
+      useMoney: ''
+      },
+      {
+        userId: 2,
+        userName: '',
+        useMoney: ''
+      },
+      {
+        userId: 3,
+        userName: '',
+        useMoney: ''
+      }
+    ]
+    this.setData({
+      userinfos: userinfos
+    })
+
+    this.setData({
+      showView: false,
+      showResult: false,
+      resultData: []
+    })
+  },
   calculation: function() {
     var userInfos = this.data.userinfos;
     // Step1: get ave value
     var totalAmount = 0;
     var userNumber = 0;
-    for(var i in userInfos) {
+    for (var i in userInfos) {
       var userInfo = userInfos[i];
       var useMoney = 0;
-      if (userInfo.useMoney != '') {
+      if (userInfo.useMoney !== '') {
         useMoney = userInfo.useMoney;
         userNumber += 1;
       }
       totalAmount += parseFloat(useMoney);
     }
-    var avg = totalAmount/userNumber;
+    var avg = totalAmount / userNumber;
     console.log("totalAmount:%s,userNumber:%s,avg:%s", totalAmount, userNumber, avg);
 
     // Step2: get positives and negatives
@@ -70,7 +104,7 @@ Page({
       var userInfo = userInfos[i];
       var userId = userInfo.userId;
       var userName = userInfo.userName;
-      if (userName != '' && userInfo.useMoney != '') {
+      if (userName != '' && userInfo.useMoney !== '') {
         var useMoney = parseFloat(userInfo.useMoney);
         var diff = useMoney - avg;
         if (diff > 0) {
@@ -84,7 +118,8 @@ Page({
     }
 
     // Step3: get result
-    var result = ''
+    // var result = ''
+    this.resultData = []
     var mores = {}
     var less = {}
     if (Object.keys(positives).length >= Object.keys(negatives).length) {
@@ -106,7 +141,7 @@ Page({
       var matchPersons = [];
       var lessPerson = [];
       this.offset(mores, less, matchPersons, lessPerson)
-      if (matchPersons) {
+      if (matchPersons.length > 0) {
         // remove more person
         for (var i in matchPersons) {
           var moresPerson = matchPersons[i];
@@ -137,41 +172,69 @@ Page({
           }
           less = newless;
         }
-        
+
       } else {
         if (Object.values(mores)[0] > 0) {
-          var posSortList = Object.values(mores).sort(function (a, b) {
-            return b - a;
-          });
-          var negSortList = Object.values(less).sort(function (a, b) {
-            return a-b;
-          });
-          result += this.multiOffset(posSortList, negSortList, mores, less)
+          var posSortList = Object.keys(mores).map(function(key) {
+            return [key, mores[key]]
+          })
+          posSortList.sort(function(first, second) {
+            return second[1] - first[1];
+          })
+          var negSortList = Object.keys(less).map(function (key) {
+            return [key, less[key]]
+          })
+          negSortList.sort(function (first, second) {
+            return first[1] - second[1];
+          })
+
+          var newPosRecords = {};
+          var newNegRecords = {};
+          this.multiOffset(posSortList, negSortList, mores, less, newPosRecords, newNegRecords)
+          mores = newPosRecords
+          less = newNegRecords
         } else {
-          var negSortList = Object.values(mores).sort(function (a, b) {
-            return a - b;
-          });
-          var posSortList = Object.values(less).sort(function (a, b) {
-            return b - a;
-          });
-          result += this.multiOffset(posSortList, negSortList, less, mores)
+          var negSortList = Object.keys(mores).map(function (key) {
+            return [key, mores[key]]
+          })
+          negSortList.sort(function (first, second) {
+            return first[1] - second[1];
+          })
+
+          var posSortList = Object.keys(less).map(function (key) {
+            return [key, less[key]]
+          })
+          posSortList.sort(function (first, second) {
+            return second[1] - first[1];
+          })
+
+          var newPosRecords = {};
+          var newNegRecords = {};
+          this.multiOffset(posSortList, negSortList, less, mores, newPosRecords, newNegRecords)
+          less = newPosRecords
+          mores = newNegRecords
         }
       }
     }
 
     // Step4: show Result
+    var avgVal = 0;
+    if (avg) {
+      avgVal = avg
+    }
+
+    var showResult = false
+    if (this.data.resultData.length > 0) {
+      showResult = true
+    }
     this.setData({
       showView: true,
-      total: totalAmount,
-      avg: avg
-    })
+      showResult: showResult,
+      total: totalAmount.toFixed(2),
+      avg: avgVal.toFixed(2)
+    }) 
   },
-  showResult: function() {
-    
-  },
-  multiOffset: function (posSortList, negSortList, posRecords, negRecords) {
-    var resultData = []
-    var result = ''
+  multiOffset: function (posSortList, negSortList, posRecords, negRecords, newPosRecords, newNegRecords) {
     var maxValue = posSortList[0][1]
     var minValue = negSortList[0][1]
     if (maxValue > -minValue) {
@@ -190,29 +253,51 @@ Page({
       }
 
       //minPersons = []   
-      var minLastPerson=negSortList[index][0]
-      var diff=-(minValueSum) - maxValue
+      var minLastPerson = negSortList[index][0]
+      var diff = -(minValueSum) - maxValue
 
+      var removePersonsKeys = []
       for (var k in minPersons) {
         var minPerson = minPersons[k];
-        result += minPerson + ' handle ' + negRecords[minPerson].toFixed(2) + ' on ' + maxPerson + '\n'
-        resultData.push({
-          fromUserName: this.getUserInfoByUserId(id).userName,
-          toUserName: this.getUserInfoByUserId(uId).userName,
-          money: mores[uId].toFixed(2)
+        // result += minPerson + ' handle ' + negRecords[minPerson].toFixed(2) + ' on ' + maxPerson + '\n'
+        this.resultData.push({
+          fromUserName: this.getUserInfoByUserId(minPerson).userName,
+          toUserName: this.getUserInfoByUserId(maxPerson).userName,
+          money: (-negRecords[minPerson]).toFixed(2)
         })
 
-        negRecords.pop(minPerson)
+        removePersonsKeys.push(minPerson)
+        // negRecords.pop(minPerson)
+      }
+      var negKeyList = Object.keys(negRecords);
+      for (var q in negKeyList) {
+        var key = negKeyList[q];
+        if (!removePersonsKeys.includes(key)) {
+          newNegRecords[key] = negRecords[key];
+        }
       }
 
-      result+= minLastPerson + ' handle ' + (negSortList[index][1] + diff).toFixed(2) + ' on ' + maxPerson + '\n'
-      posRecords.pop(maxPerson)
-      negRecords[minLastPerson] = -diff
+      // result += minLastPerson + ' handle ' + (negSortList[index][1] + diff).toFixed(2) + ' on ' + maxPerson + '\n'
+      this.resultData.push({
+        fromUserName: this.getUserInfoByUserId(minLastPerson).userName,
+        toUserName: this.getUserInfoByUserId(maxPerson).userName,
+        money: (-negSortList[index][1] - diff).toFixed(2)
+      })
+
+      var posKeyList = Object.keys(posRecords);
+      for (var q in posKeyList) {
+        var key = posKeyList[q];
+        if (maxPerson != key) {
+          newPosRecords[key] = posRecords[key];
+        }
+      }
+      // posRecords.pop(minLastPerson)
+      newNegRecords[minLastPerson] = -diff
     } else {
-      minPerson = negSortList[0][0]
-      maxPersons=[posSortList[0][0]]
-      index = Object.keys(posSortList).length - 1
-      maxValueSum=maxValue
+      var minPerson = negSortList[0][0]
+      var maxPersons = [posSortList[0][0]]
+      var index = Object.keys(posSortList).length - 1
+      var maxValueSum = maxValue
       while (index > 0) {
         maxValueSum += posSortList[index][1];
         if (maxValueSum < -minValue) {
@@ -220,41 +305,68 @@ Page({
           index -= 1
         } else {
           break;
-        }       
+        }
       }
       //maxPersons = []
-      maxLastPerson=posSortList[index][0]
-      diff=maxValueSum + minValue
+      var maxLastPerson = posSortList[index][0]
+      var diff = maxValueSum + minValue
 
+      var removePersonsKeys = []
       for (var z in maxPersons) {
         var maxPerson = maxPersons[z]
-        result += maxPerson + ' handle ' + posRecords[maxPerson].toFixed(2) + ' on ' + minPerson + '\n'
-        posRecords.pop(maxPerson)
+        // result += maxPerson + ' handle ' + posRecords[maxPerson].toFixed(2) + ' on ' + minPerson + '\n'
+        this.resultData.push({
+          fromUserName: this.getUserInfoByUserId(minPerson).userName,
+          toUserName: this.getUserInfoByUserId(maxPerson).userName,
+          money: posRecords[maxPerson].toFixed(2)
+        })
+
+        removePersonsKeys.push(maxPerson)
+        // posRecords.pop(maxPerson)
+      }
+      var posKeyList = Object.keys(posRecords);
+      for (var q in posKeyList) {
+        var key = posKeyList[q];
+        if (!removePersonsKeys.includes(key)) {
+          newPosRecords[key] = posRecords[key];
+        }
       }
 
-      result+= maxLastPerson + ' handle ' + (posSortList[index][1] - diff).toFixed(2) + ' on ' + minPerson + '\n'
-      negRecords.pop(minPerson)
-      posRecords[maxLastPerson] = diff
+      // result += maxLastPerson + ' handle ' + (posSortList[index][1] - diff).toFixed(2) + ' on ' + minPerson + '\n'
+      this.resultData.push({
+        fromUserName: this.getUserInfoByUserId(minPerson).userName,
+        toUserName: this.getUserInfoByUserId(maxLastPerson).userName,
+        money: (posSortList[index][1] - diff).toFixed(2)
+      })
+      removePersonsKeys.push(maxLastPerson)
+      var negKeyList = Object.keys(negRecords);
+      for (var q in negKeyList) {
+        var key = negKeyList[q];
+        if (maxLastPerson != key) {
+          newNegRecords[key] = negRecords[key];
+        }
+      }
+      // negRecords.pop(minPerson)
+      newPosRecords[maxLastPerson] = diff
     }
-    return result;
+    // return result;
   },
-  offset: function (mores, less, matchPersons, lessPerson) {
+  offset: function(mores, less, matchPersons, lessPerson) {
     var comb = {}
     this.dfs(mores, 0, comb, '', 0)
-    var resultData = [];
     for (var i in comb) {
       var userId = i.substr(1);
       var amount = comb[i];
       for (var j in less) {
         var id = j;
         var payoff = less[j];
-        if (-amount == payoff) {
+        if (parseFloat(-amount).toFixed(2) == parseFloat(payoff).toFixed(2)) {
           matchPersons.push(userId);
           lessPerson.push(id);
           var userIdList = userId.split(',');
-          for(var i in userIdList) {
+          for (var i in userIdList) {
             var uId = userIdList[i];
-            resultData.push({
+            this.resultData.push({
               fromUserName: this.getUserInfoByUserId(id).userName,
               toUserName: this.getUserInfoByUserId(uId).userName,
               money: mores[uId].toFixed(2)
@@ -264,7 +376,7 @@ Page({
       }
     }
     this.setData({
-      resultData: resultData
+      resultData: this.resultData
     })
   },
   getUserInfoByUserId: function(userId) {
@@ -279,8 +391,8 @@ Page({
     }
     return userInofResult;
   },
-  dfs: function (source, index, comb, persons, amount) {
-    if (index < Object.keys(source).length){
+  dfs: function(source, index, comb, persons, amount) {
+    if (index < Object.keys(source).length) {
       this.dfs(source, index + 1, comb, persons, amount)
       persons += ',' + Object.keys(source)[index];
       amount += Object.values(source)[index];
@@ -292,7 +404,7 @@ Page({
     var userName = e.detail.value;
     var userId = e.currentTarget.dataset.userId;
     var userInfos = this.data.userinfos;
-    for(var i in userInfos) {
+    for (var i in userInfos) {
       var userInfo = userInfos[i];
       var id = userInfo.userId;
       if (userId == id) {
@@ -317,57 +429,57 @@ Page({
     this.userInfos = userInfos;
   },
   /**
-  * 生命周期函数--监听页面加载
-  */
-  onLoad: function (options) {
+   * 生命周期函数--监听页面加载
+   */
+  onLoad: function(options) {
 
   },
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
-  onReady: function () {
-  
+  onReady: function() {
+
   },
 
   /**
    * 生命周期函数--监听页面显示
    */
-  onShow: function () {
-  
+  onShow: function() {
+
   },
 
   /**
    * 生命周期函数--监听页面隐藏
    */
-  onHide: function () {
-  
+  onHide: function() {
+
   },
 
   /**
    * 生命周期函数--监听页面卸载
    */
-  onUnload: function () {
-  
+  onUnload: function() {
+
   },
 
   /**
    * 页面相关事件处理函数--监听用户下拉动作
    */
-  onPullDownRefresh: function () {
-  
+  onPullDownRefresh: function() {
+
   },
 
   /**
    * 页面上拉触底事件的处理函数
    */
-  onReachBottom: function () {
-  
+  onReachBottom: function() {
+
   },
 
   /**
    * 用户点击右上角分享
    */
-  onShareAppMessage: function () {
-  
+  onShareAppMessage: function() {
+
   }
 })
