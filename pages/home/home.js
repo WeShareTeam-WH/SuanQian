@@ -28,8 +28,11 @@ Page({
     showResult: false
   },
   addUserItem: function() {
-    var userInfos = this.data.userinfos;
-    var userId = userInfos[userInfos.length - 1].userId + 1;
+    var userInfos = this.data.userinfos
+    var userId = 1
+    if (userInfos.length >  0) {
+      userId = userId = userInfos[userInfos.length - 1].userId + 1;
+    }
     userInfos.push({
       userId: userId,
       userName: '',
@@ -88,10 +91,31 @@ Page({
     for (var i in userInfos) {
       var userInfo = userInfos[i];
       var useMoney = 0;
-      if (userInfo.useMoney !== '') {
-        useMoney = userInfo.useMoney;
-        userNumber += 1;
+
+      if (userInfo.useMoney === '' && userInfo.userName != '') {
+        wx.showToast({
+          title: '请输入成员' + userInfo.userName + '的金额',
+          duration: 2000,
+          icon: 'none'
+        })
+        return
       }
+
+      if (userInfo.userName == '' && userInfo.useMoney !== '') {
+        wx.showToast({
+          title: '请输入第' + (userNumber + 1) + '行成员的姓名',
+          duration: 2000,
+          icon: 'none'
+        })
+        return
+      }
+
+      if (userInfo.userName == '' && userInfo.useMoney === '') {
+        continue
+      }
+
+      useMoney = userInfo.useMoney;
+      userNumber += 1;
       totalAmount += parseFloat(useMoney);
     }
     var avg = totalAmount / userNumber;
@@ -404,6 +428,7 @@ Page({
     var userName = e.detail.value;
     var userId = e.currentTarget.dataset.userId;
     var userInfos = this.data.userinfos;
+
     for (var i in userInfos) {
       var userInfo = userInfos[i];
       var id = userInfo.userId;
