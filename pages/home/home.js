@@ -391,11 +391,22 @@ Page({
           var userIdList = userId.split(',');
           for (var i in userIdList) {
             var uId = userIdList[i];
-            this.data.resultData.push({
-              fromUserName: this.getUserInfoByUserId(id).userName,
-              toUserName: this.getUserInfoByUserId(uId).userName,
-              money: mores[uId].toFixed(2)
-            })
+            if (mores[uId]>0)
+            {
+              this.data.resultData.push({
+                fromUserName: this.getUserInfoByUserId(id).userName,
+                toUserName: this.getUserInfoByUserId(uId).userName,
+                money: mores[uId].toFixed(2)
+              })
+            }
+            else
+            {
+              this.data.resultData.push({
+                fromUserName: this.getUserInfoByUserId(uId).userName,
+                toUserName: this.getUserInfoByUserId(id).userName,
+                money: (-mores[uId]).toFixed(2)
+              })
+            }
           }
         }
       }
