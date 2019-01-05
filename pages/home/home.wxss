@@ -79,9 +79,9 @@ page{
 }
 
 .click-calculation {
-  background-color: #FFD711
+  background-color: rgb(255, 227, 86);
 }
 
 .click-reset {
-  background-color: rgb(255, 235, 134);
+  background-color: rgb(253, 223, 75);
 }

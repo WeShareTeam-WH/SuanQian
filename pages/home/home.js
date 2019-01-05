@@ -30,7 +30,7 @@ Page({
   addUserItem: function() {
     var userInfos = this.data.userinfos
     var userId = 1
-    if (userInfos.length >  0) {
+    if (userInfos.length > 0) {
       userId = userId = userInfos[userInfos.length - 1].userId + 1;
     }
     userInfos.push({
@@ -57,10 +57,10 @@ Page({
     })
   },
   resetUserItem: function() {
-    var userinfos= [{
-      userId: 1,
-      userName: '',
-      useMoney: ''
+    var userinfos = [{
+        userId: 1,
+        userName: '',
+        useMoney: ''
       },
       {
         userId: 2,
@@ -83,18 +83,37 @@ Page({
       resultData: []
     })
   },
+  isNumber: function(value) {
+    var patrn = /^(-)?\d+(\.\d+)?$/;
+    if (patrn.exec(value) == null || value === '') {
+      return false
+    } else {
+      return true
+    }
+  },
   calculation: function() {
     var userInfos = this.data.userinfos;
     // Step1: get ave value
     var totalAmount = 0;
     var userNumber = 0;
+    var userCount = 0;  // include empty and invalid row
     for (var i in userInfos) {
       var userInfo = userInfos[i];
       var useMoney = 0;
+      userCount++;
 
       if (userInfo.useMoney === '' && userInfo.userName != '') {
         wx.showToast({
-          title: '请输入成员' + userInfo.userName + '的金额',
+          title: '麻烦输入下成员 "' + userInfo.userName + '" 的金额哦~',
+          duration: 2000,
+          icon: 'none'
+        })
+        return
+      }
+
+      if (!this.isNumber(userInfo.useMoney) && userInfo.userName != '') {
+        wx.showToast({
+          title: '成员 "' + userInfo.userName + '" 的金额有点问题哦~',
           duration: 2000,
           icon: 'none'
         })
@@ -103,7 +122,7 @@ Page({
 
       if (userInfo.userName == '' && userInfo.useMoney !== '') {
         wx.showToast({
-          title: '请输入第' + (userNumber + 1) + '行成员的姓名',
+          title: '麻烦输入下第' + (userCount) + '行成员的大名哦~',
           duration: 2000,
           icon: 'none'
         })
@@ -205,10 +224,10 @@ Page({
           posSortList.sort(function(first, second) {
             return second[1] - first[1];
           })
-          var negSortList = Object.keys(less).map(function (key) {
+          var negSortList = Object.keys(less).map(function(key) {
             return [key, less[key]]
           })
-          negSortList.sort(function (first, second) {
+          negSortList.sort(function(first, second) {
             return first[1] - second[1];
           })
 
@@ -218,17 +237,17 @@ Page({
           mores = newPosRecords
           less = newNegRecords
         } else {
-          var negSortList = Object.keys(mores).map(function (key) {
+          var negSortList = Object.keys(mores).map(function(key) {
             return [key, mores[key]]
           })
-          negSortList.sort(function (first, second) {
+          negSortList.sort(function(first, second) {
             return first[1] - second[1];
           })
 
-          var posSortList = Object.keys(less).map(function (key) {
+          var posSortList = Object.keys(less).map(function(key) {
             return [key, less[key]]
           })
-          posSortList.sort(function (first, second) {
+          posSortList.sort(function(first, second) {
             return second[1] - first[1];
           })
 
@@ -259,7 +278,7 @@ Page({
       resultData: this.data.resultData
     }) 
   },
-  multiOffset: function (posSortList, negSortList, posRecords, negRecords, newPosRecords, newNegRecords) {
+  multiOffset: function(posSortList, negSortList, posRecords, negRecords, newPosRecords, newNegRecords) {
     var maxValue = posSortList[0][1]
     var minValue = negSortList[0][1]
     if (maxValue > -minValue) {
@@ -391,16 +410,13 @@ Page({
           var userIdList = userId.split(',');
           for (var i in userIdList) {
             var uId = userIdList[i];
-            if (mores[uId]>0)
-            {
+            if (mores[uId] > 0) {
               this.data.resultData.push({
                 fromUserName: this.getUserInfoByUserId(id).userName,
                 toUserName: this.getUserInfoByUserId(uId).userName,
                 money: mores[uId].toFixed(2)
               })
-            }
-            else
-            {
+            } else {
               this.data.resultData.push({
                 fromUserName: this.getUserInfoByUserId(uId).userName,
                 toUserName: this.getUserInfoByUserId(id).userName,
