@@ -5,9 +5,8 @@
     </view>
     <view class="weui-flex__item">
       <view class="column">
-        <image src='{{icon1}}' mode='widthFix' style='width: 50rpx;float:left'></image>
+        <image src='{{icon1}}' mode='aspectFit' style='width: 50rpx;height: 50rpx;float:left'></image>
         <label class="title-hint" style='float:left;padding-top:10rpx'>转给</label>
-        <!-- <input class='user-name' type='text' name='userName' value='转给'></input> -->
       </view>
     </view>
     <view class="weui-flex__item">
@@ -15,7 +14,6 @@
     </view>
     <view class="weui-flex__item" >      
       <view class="column" style='float:right;padding:5rpx 10rpx 0 5rpx;color: #FFD711;font-weight:bold;font-size:33rpx'>￥{{money}}</view>
-      <!-- <image src='{{icon2}}' mode='widthFix' style='float:right;width: 50rpx;'></image> -->
     </view>
   </view>
   <view style='margin: auto;width:95%;height:1px;background:#E8E8E8'></view> 

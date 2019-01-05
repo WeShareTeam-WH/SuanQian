@@ -12,7 +12,7 @@
         </view>
       </view>
       <view class="weui-cell weui-cell_input" style='height: 70rpx;display: flex;justify-content:center;'>
-        <image src='../../source/add.png' mode='widthFix' style='width: 50rpx;' catchtap='addUserItem'></image>
+        <image src='../../source/add.png' mode='aspectFit' style='width: 50rpx;height: 50px;' catchtap='addUserItem'></image>
       </view>
     </view>
     <view class="spend-warpper {{showView?'header_view_show':'header_view_hide'}}">
@@ -20,14 +20,14 @@
       <view class="weui-flex" style="margin:20rpx 10rpx 20rpx 20rpx;">
         <view class="weui-flex__item">
           
-            <image src='../../source/total.png' mode='widthFix' style='width: 60rpx;float:left;padding-top:5rpx'></image>
+            <image src='../../source/total.png' mode='aspectFit' style='width: 60rpx;height: 50px;float:left;padding-top:5rpx'></image>
             <text class="title-hint" style='float:left;'>消费\n总额</text>
             <!-- <label class="summary" style='float:left;padding:0 10rpx 0 10rpx;'>￥{{total}}</label> -->
             <view class="summary" >￥{{total}}</view>
           
         </view>
         <view class="weui-flex__item">
-            <image src='../../source/renjun.png' mode='widthFix' style='width: 60rpx;float:left;;padding-top:5rpx'></image>
+            <image src='../../source/renjun.png' mode='aspectFit' style='width: 60rpx;height: 50px;float:left;;padding-top:5rpx'></image>
             <text class="title-hint" style='float:left'>人均\n消费</text>
             <!-- <label class="summary" style='float:left;padding:0 10rpx 0 10rpx;'>￥{{avg}}</label> -->
             <view class="summary" >￥{{avg}}</view>

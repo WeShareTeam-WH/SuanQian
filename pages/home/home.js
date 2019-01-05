@@ -143,7 +143,7 @@ Page({
 
     // Step3: get result
     // var result = ''
-    this.resultData = []
+    this.data.resultData = []
     var mores = {}
     var less = {}
     if (Object.keys(positives).length >= Object.keys(negatives).length) {
@@ -255,7 +255,8 @@ Page({
       showView: true,
       showResult: showResult,
       total: totalAmount.toFixed(2),
-      avg: avgVal.toFixed(2)
+      avg: avgVal.toFixed(2),
+      resultData: this.data.resultData
     }) 
   },
   multiOffset: function (posSortList, negSortList, posRecords, negRecords, newPosRecords, newNegRecords) {
@@ -284,7 +285,7 @@ Page({
       for (var k in minPersons) {
         var minPerson = minPersons[k];
         // result += minPerson + ' handle ' + negRecords[minPerson].toFixed(2) + ' on ' + maxPerson + '\n'
-        this.resultData.push({
+        this.data.resultData.push({
           fromUserName: this.getUserInfoByUserId(minPerson).userName,
           toUserName: this.getUserInfoByUserId(maxPerson).userName,
           money: (-negRecords[minPerson]).toFixed(2)
@@ -302,7 +303,7 @@ Page({
       }
 
       // result += minLastPerson + ' handle ' + (negSortList[index][1] + diff).toFixed(2) + ' on ' + maxPerson + '\n'
-      this.resultData.push({
+      this.data.resultData.push({
         fromUserName: this.getUserInfoByUserId(minLastPerson).userName,
         toUserName: this.getUserInfoByUserId(maxPerson).userName,
         money: (-negSortList[index][1] - diff).toFixed(2)
@@ -339,7 +340,7 @@ Page({
       for (var z in maxPersons) {
         var maxPerson = maxPersons[z]
         // result += maxPerson + ' handle ' + posRecords[maxPerson].toFixed(2) + ' on ' + minPerson + '\n'
-        this.resultData.push({
+        this.data.resultData.push({
           fromUserName: this.getUserInfoByUserId(minPerson).userName,
           toUserName: this.getUserInfoByUserId(maxPerson).userName,
           money: posRecords[maxPerson].toFixed(2)
@@ -357,7 +358,7 @@ Page({
       }
 
       // result += maxLastPerson + ' handle ' + (posSortList[index][1] - diff).toFixed(2) + ' on ' + minPerson + '\n'
-      this.resultData.push({
+      this.data.resultData.push({
         fromUserName: this.getUserInfoByUserId(minPerson).userName,
         toUserName: this.getUserInfoByUserId(maxLastPerson).userName,
         money: (posSortList[index][1] - diff).toFixed(2)
@@ -390,7 +391,7 @@ Page({
           var userIdList = userId.split(',');
           for (var i in userIdList) {
             var uId = userIdList[i];
-            this.resultData.push({
+            this.data.resultData.push({
               fromUserName: this.getUserInfoByUserId(id).userName,
               toUserName: this.getUserInfoByUserId(uId).userName,
               money: mores[uId].toFixed(2)
@@ -399,9 +400,6 @@ Page({
         }
       }
     }
-    this.setData({
-      resultData: this.resultData
-    })
   },
   getUserInfoByUserId: function(userId) {
     var userInfos = this.data.userinfos
