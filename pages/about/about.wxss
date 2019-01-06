@@ -1,0 +1,101 @@
+/* pages/about.wxss */
+.page {
+  width: 100%;
+  height: 100%;
+}
+
+.head-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+  width: 100%;
+  height: 100%;
+}
+
+.head-info image {
+  display: flex;
+  width: 160rpx;
+  height: 150rpx;
+  margin-bottom: 5px;
+}
+
+.head-info .version {
+  display: flex;
+  font-size: 30rpx;
+  color: rgb(138, 138, 138);
+}
+
+.head-info .us-info {
+  width: 80%;
+  margin-top: 15px;
+}
+
+/* .head-info .us-info .user {
+  float: right;
+} */
+
+.head-info .us-info .user .name {
+  font-size: 15px;
+}
+
+.head-info .email {
+  font-size: 13px;
+  display:flex;
+  align-items:center;
+}
+
+.head-info .us-info .user .position {
+  font-size: 12px;
+  margin-left: 6px;
+  color: green;
+}
+
+.head-info .us-info .email image {
+  width: 20px;
+  height: 20px;
+  display: inline-flex;
+  margin-bottom:0px;
+}
+
+.contact-info {
+  display: flex;
+  position: fixed;
+  bottom: 30px;
+}
+
+.contact-info .contact-us {
+  background-color: rgba(255, 255, 255, 0);
+  border: 0px;
+  border-width: 0;
+  color: rgba(0, 0, 0, 0.6)
+}
+
+.contact-info .contact-us image {
+  margin-bottom: -2px;
+}
+
+.contact-info .contact-us text {
+  font-size: 13px;
+  color:#586c94;
+}
+
+.contact-info .opinion {
+  width: 60px;
+  height: 60px;
+}
+
+.contact-info .contact {
+  width: 50px;
+  height: 47px;
+  margin-top: 7px;
+}
+
+.contact-info .footer-text {
+  font-size: 13px;
+}
+
+.weui-footer__link button::after {
+  border: none;
+}

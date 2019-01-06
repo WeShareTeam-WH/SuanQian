@@ -22,14 +22,12 @@
           
             <image src='../../source/total.png' mode='aspectFit' style='width: 60rpx;height: 35px;float:left;padding-bottom:5rpx'></image>
             <text class="title-hint" style='float:left;'>消费\n总额</text>
-            <!-- <label class="summary" style='float:left;padding:0 10rpx 0 10rpx;'>￥{{total}}</label> -->
             <view class="summary" >￥{{total}}</view>
           
         </view>
         <view class="weui-flex__item">
             <image src='../../source/renjun.png' mode='aspectFit' style='width: 60rpx;height: 35px;float:left;;padding-top:5rpx'></image>
             <text class="title-hint" style='float:left'>人均\n消费</text>
-            <!-- <label class="summary" style='float:left;padding:0 10rpx 0 10rpx;'>￥{{avg}}</label> -->
             <view class="summary" >￥{{avg}}</view>
           
         </view>
@@ -49,8 +47,8 @@
 
     <view class="weui-footer">
       <view class="weui-footer__links">
-        <navigator url="" class="weui-footer__link">计算规则</navigator>
-        <navigator url="" class="weui-footer__link">关于我们</navigator>
+        <navigator url="" class="weui-footer__link" bindtap='guize'>计算规则</navigator>
+        <navigator url="/pages/about/about" class="weui-footer__link">关于我们</navigator>
       </view>
       <view class="weui-footer__text">Copyright © 2018-2019 wesharer.cn</view>
     </view>

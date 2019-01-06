@@ -2,23 +2,18 @@ Page({
   data: {
     userinfos: [{
         userId: 1,
-        userName: 'Simon',
-        useMoney: 3
+        userName: '',
+        useMoney: ''
       },
       {
         userId: 2,
-        userName: 'Lowrence',
-        useMoney: 5
+        userName: '',
+        useMoney: ''
       },
       {
         userId: 3,
-        userName: 'Tom',
-        useMoney: 0
-      },
-      {
-        userId: 4,
-        userName: 'Joseph',
-        useMoney: 0
+        userName: '',
+        useMoney: ''
       }
     ],
     resultData: [],
@@ -161,7 +156,6 @@ Page({
     }
 
     // Step3: get result
-    // var result = ''
     this.data.resultData = []
     var mores = {}
     var less = {}
@@ -303,7 +297,6 @@ Page({
       var removePersonsKeys = []
       for (var k in minPersons) {
         var minPerson = minPersons[k];
-        // result += minPerson + ' handle ' + negRecords[minPerson].toFixed(2) + ' on ' + maxPerson + '\n'
         this.data.resultData.push({
           fromUserName: this.getUserInfoByUserId(minPerson).userName,
           toUserName: this.getUserInfoByUserId(maxPerson).userName,
@@ -321,7 +314,6 @@ Page({
         }
       }
 
-      // result += minLastPerson + ' handle ' + (negSortList[index][1] + diff).toFixed(2) + ' on ' + maxPerson + '\n'
       this.data.resultData.push({
         fromUserName: this.getUserInfoByUserId(minLastPerson).userName,
         toUserName: this.getUserInfoByUserId(maxPerson).userName,
@@ -335,7 +327,7 @@ Page({
           newPosRecords[key] = posRecords[key];
         }
       }
-      // posRecords.pop(minLastPerson)
+
       newNegRecords[minLastPerson] = -diff
     } else {
       var minPerson = negSortList[0][0]
@@ -351,14 +343,14 @@ Page({
           break;
         }
       }
-      //maxPersons = []
+
       var maxLastPerson = posSortList[index][0]
       var diff = maxValueSum + minValue
 
       var removePersonsKeys = []
       for (var z in maxPersons) {
         var maxPerson = maxPersons[z]
-        // result += maxPerson + ' handle ' + posRecords[maxPerson].toFixed(2) + ' on ' + minPerson + '\n'
+
         this.data.resultData.push({
           fromUserName: this.getUserInfoByUserId(minPerson).userName,
           toUserName: this.getUserInfoByUserId(maxPerson).userName,
@@ -366,7 +358,6 @@ Page({
         })
 
         removePersonsKeys.push(maxPerson)
-        // posRecords.pop(maxPerson)
       }
       var posKeyList = Object.keys(posRecords);
       for (var q in posKeyList) {
@@ -376,7 +367,6 @@ Page({
         }
       }
 
-      // result += maxLastPerson + ' handle ' + (posSortList[index][1] - diff).toFixed(2) + ' on ' + minPerson + '\n'
       this.data.resultData.push({
         fromUserName: this.getUserInfoByUserId(minPerson).userName,
         toUserName: this.getUserInfoByUserId(maxLastPerson).userName,
@@ -390,10 +380,9 @@ Page({
           newNegRecords[key] = negRecords[key];
         }
       }
-      // negRecords.pop(minPerson)
+
       newPosRecords[maxLastPerson] = diff
     }
-    // return result;
   },
   offset: function(mores, less, matchPersons, lessPerson) {
     var comb = {}
@@ -477,6 +466,13 @@ Page({
       }
     }
     this.userInfos = userInfos;
+  },
+  guize: function() {
+    wx.showToast({
+      title: '程序猿小哥哥们正在兼容更多复杂场景....期待我们下次升级吧',
+      duration: 2600,
+      icon: 'none'
+    })
   },
   /**
    * 生命周期函数--监听页面加载

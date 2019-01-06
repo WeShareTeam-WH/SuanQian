@@ -1,0 +1,44 @@
+<view class="page">
+  <view class='head-info'>
+    <image src='../../source/suanqianle.jpeg' mode='aspectFit'></image>
+    <text class='version'>算钱了 1.0.0</text>
+    <view class='us-info'>
+      <view style='text-align:center'>
+        <text>开发团队</text>
+      </view>
+      <view class='user' style='margin-top: 20px;'>
+        <text class='name'>Simon</text>
+        <text class='position'>代码只是工具，段位可是钻石</text>
+      </view>
+      <view class='email'>
+        <image src='../../source/email.png' mode='aspectFit'></image>
+        <text class='emaill-adress'>17607161039@163.com</text>
+      </view>
+
+      <view class='user' style='margin-top: 20px;'>
+        <text class='name'>Lawrence</text>
+        <text class='position'>一个被敲代码耽误的设计师</text>
+      </view>
+      <view class='email'>
+        <image src='../../source/email.png' mode='aspectFit'></image>
+        <text class='emaill-adress'>lry_wy@163.com</text>
+      </view>
+    </view>
+    <view class='contact-info'>
+      <view class="weui-footer">
+        <view class="weui-footer__links">
+          <view class='weui-footer__link'>
+            <button open-type='contact' class='contact-us' session-from='weapp'>
+              <image class='contact' src='../../source/lianxiwomen.png' mode='aspectFit'></image>
+              <text class='footer-text'>联系我们</text>
+            </button>
+          </view>
+          <view class='weui-footer__link' bindtap='fankui'>
+            <image class='opinion' src='../../source/opinion.png' mode='aspectFit'></image>
+            <text class='footer-text'>反馈意见</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
