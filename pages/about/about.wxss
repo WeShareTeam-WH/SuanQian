@@ -36,8 +36,13 @@
   float: right;
 } */
 
+.head-info .us-info .user {
+  margin-top: 10px
+}
+
 .head-info .us-info .user .name {
-  font-size: 15px;
+  font-size: 16px;
+  color: #515050;
 }
 
 .head-info .email {
@@ -48,8 +53,9 @@
 
 .head-info .us-info .user .position {
   font-size: 12px;
-  margin-left: 6px;
-  color: green;
+  color: #93488d;
+  float: right;
+  margin-top: 10rpx;
 }
 
 .head-info .us-info .email image {
@@ -82,14 +88,13 @@
 }
 
 .contact-info .opinion {
-  width: 60px;
+  width: 54px;
   height: 60px;
 }
 
 .contact-info .contact {
-  width: 50px;
-  height: 47px;
-  margin-top: 7px;
+  width: 57px;
+  height: 60px;
 }
 
 .contact-info .footer-text {
@@ -98,4 +103,10 @@
 
 .weui-footer__link button::after {
   border: none;
+}
+
+.emaill-adress
+{
+  color: #515050;
+  margin-left: 10rpx;
 }
