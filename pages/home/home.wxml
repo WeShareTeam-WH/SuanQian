@@ -5,12 +5,20 @@
     <view class="spend-warpper">
       <view class="weui-cells__title wrapper-title">成员出资
         <label class="title-hint">每个小伙伴出的钱</label>
-      </view>
-      <view class='user-item'>
-        <view wx:for='{{userinfos}}' wx:key='item'>
-          <template is="iconInputTemplate" data="{{icon1:'../../source/user.png',icon2:'../../source/money.png', userId: item.userId, userName: item.userName, useMoney: item.useMoney}}" />
+        <view class="userinfo">
+          <button class="auth-btn" wx:if="{{!hasUserInfo && canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 授权登录</button>
+          <block wx:else>
+            <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
+          </block>
         </view>
       </view>
+
+      <view class='user-item'>
+        <view wx:for='{{userinfos}}' wx:key='item'>
+          <template is="iconInputTemplate" data="{{icon1: item.icon1, icon2: item.icon2, userId: item.userId, userName: item.userName, useMoney: item.useMoney}}" />
+        </view>
+      </view>
+
       <view class="weui-cell weui-cell_input" style='height: 70rpx;display: flex;justify-content:center;' catchtap='addUserItem'>
         <image src='../../source/add.png' mode='aspectFit' style='width: 50rpx;height: 50px;'></image>
       </view>
@@ -43,6 +51,7 @@
     <view class='option-button'>
       <button class='weui-btn calculation' hover-class='click-calculation' bindtap='calculation'>计算</button>
       <button class='weui-btn reset' hover-class='click-reset' bindtap='resetUserItem'>重置</button>
+      <button class="btn-share" data-name="shareBtn" open-type="share">转发</button>
     </view>
 
     <view class="weui-footer">
