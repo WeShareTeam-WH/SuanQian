@@ -1,27 +1,130 @@
+const restService = require("../../service/restService")
+const sessionCache = require("../../common/sessionCache")
+const loginService = require("../../service/loginService")
+const util = require("../../utils/util")
+const app = getApp()
+
 Page({
   data: {
     userinfos: [{
+        icon1:'../../source/user.png',
+        icon2:'../../source/money.png',
         userId: 1,
-        userName: '',
-        useMoney: ''
-      },
-      {
-        userId: 2,
-        userName: '',
-        useMoney: ''
-      },
-      {
-        userId: 3,
         userName: '',
         useMoney: ''
       }
     ],
+    userInfo: {},
+    hasUserInfo: false,
+    canIUse: wx.canIUse('button.open-type.getUserInfo'),
     resultData: [],
     total: 0,
     avg: 0,
     showView: false,
-    showResult: false
+    showResult: false,
+    currentBillId:"",
+    isActive:false
   },
+
+/**
+   * 生命周期函数--监听页面加载
+   */
+  onLoad: function(options) {
+    if (app.globalData.userInfo) {
+      this.setData({
+        userInfo: app.globalData.userInfo,
+        hasUserInfo: true
+      })
+      sessionCache.set("userInfo", this.data.userInfo)
+    } else if (this.data.canIUse){
+      // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
+      // 所以此处加入 callback 以防止这种情况
+      app.userInfoReadyCallback = res => {
+        this.setData({
+          userInfo: res.userInfo,
+          hasUserInfo: true
+        })
+        sessionCache.set("userInfo", this.data.userInfo)
+      }
+    } else {
+      // 在没有 open-type=getUserInfo 版本的兼容处理
+      wx.getUserInfo({
+        success: res => {
+          app.globalData.userInfo = res.userInfo
+          this.setData({
+            userInfo: res.userInfo,
+            hasUserInfo: true
+          })
+          sessionCache.set("userInfo", this.data.userInfo)
+        }
+      })
+    }
+
+    loginService.login((res) =>{
+        const activeUser = sessionCache.get("activeUser")
+        let userInfos = this.data.userinfos
+        userInfos[0].userName = activeUser.name
+        userInfos[0].icon1 = activeUser.img
+        this.setData({
+          userinfos:userInfos
+        })
+      },(res) =>{
+        console.log(res)
+        // wx.showToast({
+        //   title: '请先授权！',
+        //   icon: "none"
+        // })
+      })
+  },
+
+  getUserInfo: function(e) {
+    console.log(e)
+    app.globalData.userInfo = e.detail.userInfo
+    this.setData({
+      userInfo: e.detail.userInfo,
+      hasUserInfo: true
+    })
+    sessionCache.set("userInfo", this.data.userInfo)
+    loginService.login((res) =>{
+      const activeUser = sessionCache.get("activeUser")
+      let userInfos = this.data.userinfos
+      userInfos[0].userName = activeUser.name
+      userInfos[0].icon1 = activeUser.img
+      this.setData({
+        userinfos:userInfos
+      })
+    },(res) =>{
+      console.log(res)
+      // wx.showToast({
+      //   title: '请先授权！',
+      //   icon: "none"
+      // })
+    })
+  },
+
+  /**
+   * 生命周期函数--监听页面显示
+   */
+  onShow: function() {
+
+  },
+
+  /**
+   * 用户点击右上角分享
+   */
+  onShareAppMessage: function () {
+    return {
+      title: '好友喊您算钱了~',
+      path:  "pages/home/home?"+ "billId="+this.data.currentBillId,
+      //imageUrl:config.url.images+"",
+      success: (res)=>{
+      },
+      fail: function (res) {
+        console.log(res);
+      }
+    }
+  },
+
   addUserItem: function() {
     var userInfos = this.data.userinfos
     var userId = 1
@@ -56,16 +159,6 @@ Page({
         userId: 1,
         userName: '',
         useMoney: ''
-      },
-      {
-        userId: 2,
-        userName: '',
-        useMoney: ''
-      },
-      {
-        userId: 3,
-        userName: '',
-        useMoney: ''
       }
     ]
     this.setData({
@@ -87,6 +180,7 @@ Page({
     }
   },
   calculation: function() {
+    loginService.login((a)=>{},(b)=>{})
     var userInfos = this.data.userinfos;
     // Step1: get ave value
     var totalAmount = 0;
@@ -474,58 +568,5 @@ Page({
       icon: 'none'
     })
   },
-  /**
-   * 生命周期函数--监听页面加载
-   */
-  onLoad: function(options) {
-
-  },
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady: function() {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: function() {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide: function() {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload: function() {
-
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function() {
-
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom: function() {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function() {
-
-  }
+  
 })

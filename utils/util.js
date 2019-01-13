@@ -14,6 +14,13 @@ const formatNumber = n => {
   return n[1] ? n : '0' + n
 }
 
+function copy(oldObject) {
+  let newObject = {}
+  newObject = JSON.parse(JSON.stringify(oldObject))
+  return newObject
+}
+
 module.exports = {
-  formatTime: formatTime
+  formatTime,
+  copy
 }

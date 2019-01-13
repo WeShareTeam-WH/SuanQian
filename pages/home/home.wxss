@@ -35,6 +35,7 @@ page{
   font-size: 30rpx;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
+  display: flex;
 }
 
 .title-hint {
@@ -85,3 +86,33 @@ page{
 .click-reset {
   background-color: rgb(253, 223, 75);
 }
+
+/**授权**/
+
+.auth-btn{
+  border-radius:20%;
+  height:60rpx;
+  font-size:30rpx;
+  line-height:60rpx;
+  background-color:rgb(253, 223, 75);
+}
+
+.userinfo {
+  display:flex;
+  flex-direction:row;
+  align-items:center;
+  height:40rpx;
+  margin-left:20px;
+}
+
+.userinfo-avatar {
+  width: 60rpx;
+  height: 60rpx;
+  border-radius: 50%;
+}
+
+.userinfo-nickname {
+  color: rgb(253, 223, 75);
+}
+
+/**/

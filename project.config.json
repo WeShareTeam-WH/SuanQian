@@ -15,6 +15,7 @@
 	"appid": "wxfa6c72634adf8c1d",
 	"projectname": "%E7%AE%97%E9%92%B1%E4%BA%86",
 	"isGameTourist": false,
+	"cloudfunctionRoot": "cloud-functions/",
 	"condition": {
 		"search": {
 			"current": -1,
