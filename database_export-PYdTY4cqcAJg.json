@@ -1,0 +1,1 @@
+{"_id":"XDmzGnkPDdDCJ3Se","status":"Active","total":11.1223,"average":"5.2","members":[{"createBy":"user2","memberId":"user1","money":4.3,"comment":"备注","updateAt":{"$date":"2019-01-12T09:24:23.158Z"}}],"name":"三月二十八","createdBy":"user1","createdAt":{"$date":"2019-01-12T09:20:14.148Z"},"result":[{"from":"user1","to":"user2","money":5.32}]}

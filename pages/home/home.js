@@ -1,6 +1,7 @@
 const restService = require("../../service/restService")
 const sessionCache = require("../../common/sessionCache")
 const loginService = require("../../service/loginService")
+const billService = require("../../service/billService.js")
 const util = require("../../utils/util")
 const app = getApp()
 
@@ -10,8 +11,12 @@ Page({
         icon1:'../../source/user.png',
         icon2:'../../source/money.png',
         userId: 1,
-        userName: '',
-        useMoney: ''
+        memberId: 1,
+        memberShowName: '',
+        useMoney: '',
+        createBy: '',
+        comment: '',
+        updateAt: util.formatTime(new Date())
       }
     ],
     userInfo: {},
@@ -22,15 +27,173 @@ Page({
     avg: 0,
     showView: false,
     showResult: false,
-    currentBillId:"",
-    isActive:false
+    currentBillId:"-1",
+    isActive:false,
+    billStatus: 'Active',
+    billName: ''
   },
+  onPullDownRefresh: function () {
+    const activeUser = sessionCache.get("activeUser")
+    if (activeUser) {
+      this.createOrUpdateBill()
+    } else {
+      wx.showToast({
+        title: '请认证登陆',
+        duration: 2000
+      })
+    }
+  },
+  createOrUpdateBill: function() {
+    var billId = this.data.currentBillId
+    if (this.data.userinfos.length > 0) {
+      this.prepareBillData(billId)
+    } else {
+      wx.stopPullDownRefresh()
+    }
+  },
+  prepareBillData: function (billId) {
+    const db = wx.cloud.database()
+    db.collection('bills')
+    .where({
+      _id: billId
+    }).get({
+      success: res => {
+        const serverBill = res.data[0]
+        const loginUser = sessionCache.get('activeUser')
+        // 当前用户和服务器账单整合后的账单，并将其更新到服务器
+        var combineBill = {}
+        // 账单已存在且当前用户不是账单创建者，只更新当前用户创建或更新的成员出资数据
+        if (billId != '-1' && serverBill.createdBy != loginUser._id) {
+          var members = []
+          this.data.userInfos.forEach(item => {
+            if (item.createBy == loginUser._id) {
+              members.push(item)
+            }
+          })
+          combineBill.members = this.data.userInfos
+        } else {
+          if (billId != '-1') {
+            // 账单已存在且当前用户是账单创建者
+            combineBill = serverBill
+          } else {
+            // 账单不存在
+            combineBill.average = this.data.avg
+            combineBill.createdAt = util.formatTime(new Date())
+            combineBill.createdBy = loginUser._id
+            combineBill.name = util.generalBillName(loginUser.name)
+            combineBill.result = this.data.resultData
+            combineBill.status = this.data.billStatus
+            combineBill.total = this.data.total
+          }
+          combineBill.members = this.data.userinfos
+        }
 
-/**
-   * 生命周期函数--监听页面加载
-   */
+        var bills = db.collection('bills')
+        if (billId == '-1') {
+          // 账单不存在，插入账单
+          bills.add({
+            data: combineBill,
+            success: res => {
+              this.setData({
+                currentBillId: res._id
+              })
+              wx.stopPullDownRefresh()
+            },
+            fail(err) {
+              console.error(err)
+            }
+          })
+        } else {
+          // 账单已存在，更新账单
+          var updateData = {};
+          updateData.members = []
+          let serverMembers = serverBill.members;
+          let localMembers = combineBill.members;
+          if (serverMembers) {
+            // Step2: judge need update data
+            if (combineBill.average && serverBill.average != combineBill.average) {
+              updateData.average = combineBill.average;
+            }
+            //updateData = util.copy(res.data[0])
+            updateData.members = []
+            let newAddMembers = []
+            let newUpdateMembers = []
+            serverMembers.forEach((serverItem) => {
+              localMembers.forEach((localItem) => {
+                if (serverItem.memberId === localItem.memberId) {
+                  if (serverBill.createdBy === loginUser._id) {
+                    newUpdateMembers.push(localItem)
+                  } else {
+                    newUpdateMembers.push(serverItem)
+                    newUpdateMembers.push({
+                      average: serverItem.average,
+                      createdAt: serverItem.createdAt,
+                      createdBy: serverItem.createdBy,
+                      members: serverItem.members,
+                      name: serverItem.name,
+                      result: serverItem.result,
+                      status: serverItem.status,
+                      total: serverItem.total
+                    })
+                  }
+                }
+              })
+            });
+
+            localMembers.forEach((localItem) => {
+              let localMemberFound = false
+              serverMembers.forEach((serverItem) => {
+                if (serverItem.memberId === localItem.memberId) {
+                  localMemberFound = true
+                }
+              })
+              if (!localMemberFound) {
+                newAddMembers.push(localItem)
+              }
+            })
+
+            newAddMembers.forEach((item) => {
+              updateData.members.push(item)
+            })
+
+            newUpdateMembers.forEach((item) => {
+              updateData.members.push(item)
+            })
+
+            wx.cloud.callFunction({
+              // 云函数名称
+              name: 'updateBill',
+              // 传给云函数的参数
+              data: {
+                updateData: updateData,
+                billId: serverBill._id
+              },
+            }).then(res => {
+              db.collection('bills')
+                .where({
+                  _id: billId
+                }).get({
+                  success: billDatas => {
+                    var m = billDatas.data[0].members
+                    this.setData({
+                      userinfos: m
+                    })
+                    wx.stopPullDownRefresh()
+                  }
+                }
+                )
+            }).catch(console.error)
+          }
+        }
+      },
+      fail: res => {
+        console.log(res)
+      }
+    })
+  },
   onLoad: function(options) {
     if (app.globalData.userInfo) {
+      console.log(app.globalData.userInfo)
       this.setData({
         userInfo: app.globalData.userInfo,
         hasUserInfo: true
@@ -40,6 +203,7 @@ Page({
       // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
       // 所以此处加入 callback 以防止这种情况
       app.userInfoReadyCallback = res => {
+        console.log(res.userInfo)
         this.setData({
           userInfo: res.userInfo,
           hasUserInfo: true
@@ -60,23 +224,79 @@ Page({
       })
     }
 
-    loginService.login((res) =>{
-        const activeUser = sessionCache.get("activeUser")
-        let userInfos = this.data.userinfos
-        userInfos[0].userName = activeUser.name
-        userInfos[0].icon1 = activeUser.img
-        this.setData({
-          userinfos:userInfos
-        })
-      },(res) =>{
-        console.log(res)
-        // wx.showToast({
-        //   title: '请先授权！',
-        //   icon: "none"
-        // })
+    this.data.userinfos[0].memberId = sessionCache.get("activeUser")._id
+
+    const db = wx.cloud.database()
+    var billId = options.billId
+    if (billId) {
+      db.collection('bills').where({
+        _id: billId
+      }).get({
+        success: res => {
+          var combineBill = res.data[0]
+          console.log(combineBill)
+          this.setData({
+            currentBillId: combineBill._id,
+            userinfos: combineBill.members
+          })
+        },
+        fail: err => {
+          wx.showToast({
+            icon: 'none',
+            title: '查询记录失败'
+          })
+        }
       })
+    } else {
+      db.collection('bills').where({
+        members: {
+          memberId: this.data.userinfos[0].memberId
+        }
+      }).get({
+        success: res => {
+          var combineBill = res.data[0]
+          this.setData({
+            currentBillId: combineBill._id,
+            userinfos: combineBill.members
+          })
+        },
+        fail: err => {
+          wx.showToast({
+            icon: 'none',
+            title: '查询记录失败'
+          })
+        }
+      })
+    }
   },
 
+  getCurrentBill: function(e){
+
+  },
+  initialBillData: function() {
+    loginService.login((res) => {
+      var loginUserInfo = sessionCache.get("activeUser")
+      this.setData({
+        userinfos: [{
+          icon1: loginUserInfo.img,
+          icon2: '../../source/money.png',
+          userId: 1,
+          memberId: loginUserInfo._id,
+          memberShowName: loginUserInfo.name,
+          useMoney: '',
+          createBy: loginUserInfo._id,
+          comment: '',
+          updateAt: util.formatTime(new Date())
+        }]
+      })
+    }, (res) => {
+      console.log(res)
+      // wx.showToast({
+      //   title: '请先授权！',
+      //   icon: "none"
+      // })
+    })
+  },
   getUserInfo: function(e) {
     console.log(e)
     app.globalData.userInfo = e.detail.userInfo
@@ -89,6 +309,7 @@ Page({
       const activeUser = sessionCache.get("activeUser")
       let userInfos = this.data.userinfos
       userInfos[0].userName = activeUser.name
+      userInfos[0].memberId = activeUser.userId
       userInfos[0].icon1 = activeUser.img
       this.setData({
         userinfos:userInfos
@@ -118,6 +339,7 @@ Page({
       path:  "pages/home/home?"+ "billId="+this.data.currentBillId,
       //imageUrl:config.url.images+"",
       success: (res)=>{
+        console.log(res)
       },
       fail: function (res) {
         console.log(res);
@@ -129,12 +351,23 @@ Page({
     var userInfos = this.data.userinfos
     var userId = 1
     if (userInfos.length > 0) {
-      userId = userId = userInfos[userInfos.length - 1].userId + 1;
+      userId = userInfos[userInfos.length - 1].userId + 1;
+    }
+    var createBy = ''
+    const loginUser = sessionCache.get('activeUser')
+    if (loginUser) {
+      createBy = loginUser.userId
     }
     userInfos.push({
+      icon1: '../../source/user.png',
+      icon2: '../../source/money.png',
       userId: userId,
-      userName: '',
-      useMoney: ''
+      memberId: userId,
+      memberShowName: '',
+      useMoney: '',
+      createBy: createBy,
+      comment: '',
+      updateAt: util.formatTime(new Date())
     })
     this.setData({
       userinfos: userInfos
@@ -156,6 +389,8 @@ Page({
   },
   resetUserItem: function() {
     var userinfos = [{
+        icon1: '../../source/user.png',
+        icon2: '../../source/money.png',
         userId: 1,
         userName: '',
         useMoney: ''
@@ -567,6 +802,5 @@ Page({
       duration: 2600,
       icon: 'none'
     })
-  },
-  
+  }
 })

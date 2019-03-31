@@ -3,11 +3,11 @@ const util = require("../utils/util")
 
 const login = (success, failed) => {
   const activeUser = sessionCache.get('activeUser')
-  if (activeUser) {
+  const userInfo = sessionCache.get("userInfo")
+  if (activeUser && activeUser.name == userInfo.nickName) {
     typeof success === 'function' && success(activeUser)
   }
   else {
-    const userInfo = sessionCache.get("userInfo")
     if (userInfo){
       wx.login({
         success: function (res) {
@@ -31,7 +31,7 @@ const login = (success, failed) => {
               }
 
               db.collection('users').where({
-                openid:res.result.openid
+                "openid":res.result.openid
               }).get({
                 success: res => {
                   if (res && res.data && res.data.length > 0){

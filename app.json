@@ -6,6 +6,7 @@
     "pages/about/about"
   ],
   "window": {
+    "enablePullDownRefresh": true,
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#FFD711",
     "navigationBarTitleText": "算钱了 娱乐AA制",
